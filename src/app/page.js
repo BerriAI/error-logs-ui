@@ -6,12 +6,12 @@ import { Card, Text, Title, Grid, Col, Metric, Italic, Callout, Badge } from "@t
 const keyToTitle = {
   "PRE_CALL": "Arguments passed to Provider",
   "EXCEPTION": "Exception",
-  "KWARGS": "Arguments to litellm.completion",
+  "KWARGS": "Arguments to litellm.completion()",
   "POST_CALL": "Results of litellm.completion call",
 };
 
-const topRowKeys = ['PRE_CALL', 'EXCEPTION'];
-const bottomRowKeys = ['KWARGS', 'POST_CALL'];
+const topRowKeys = ['PRE_CALL', 'POST_CALL'];
+const bottomRowKeys = ['KWARGS'];
 
 const HomePage = () => {
   const [jsonData, setJsonData] = useState({
@@ -95,9 +95,19 @@ const HomePage = () => {
               <Title>Messages: {messages}</Title>
             </Card>
           </Col>
-          <Col className='mx-2'>
-            <Alert description={exception} type="error" showIcon className='mx-2 mt-5'/>
-          </Col>
+          {jsonData['EXCEPTION'] && ( // Render the card only if 'EXCEPTION' is present
+            <Col className='mx-2 mt-3'>
+
+                <Callout
+                  title="Exception"
+                  color="rose"
+                >
+                  <Title>{jsonData['EXCEPTION']}</Title>
+                </Callout>
+                
+
+            </Col>
+          )}
           {topRowCards}
           {bottomRowCards}
         </Grid>
