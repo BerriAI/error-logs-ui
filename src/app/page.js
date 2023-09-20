@@ -1,4 +1,4 @@
-"use client"
+'use client'
 // pages/index.js
 import React from 'react';
 import { Alert } from 'antd';
