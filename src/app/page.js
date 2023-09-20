@@ -1,7 +1,8 @@
 'use client'
 // pages/index.js
-import React from 'react';
 import { Alert } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, Text, Title, Grid, Col, Metric, Italic, Callout, Badge } from "@tremor/react";
 const keyToTitle = {
   "PRE_CALL": "Arguments passed to Provider",
@@ -12,22 +13,41 @@ const keyToTitle = {
 
 const topRowKeys = ['PRE_CALL', 'EXCEPTION'];
 const bottomRowKeys = ['KWARGS', 'POST_CALL'];
+let jsonData = {
+  'PRE_CALL':'',
+  'EXCEPTION': '',
+  'KWARGS': '',
+  'POST_CALL': ''
+};
 
 const HomePage = () => {
+  console.log("GMMMM@@@@");
+  const router = useRouter();
+  console.log('router', router.query);
 
-  // Get the current URL
-  var currentURL = window.location.href;
-  console.log('current url', currentURL);
 
-  let params = (new URL(currentURL)).searchParams;
-  console.log('params', params);
-  let jsonData = params.get('data'); // is the string with your JSON
-  console.log("json data", jsonData);
-  try {
-      jsonData = JSON.parse(jsonData);
-  } catch (error) {
-      console.error("Error parsing JSON data:", error);
-  }
+  console.log('router', router.asPath);
+
+  useEffect(() => {
+    if(router && router.query) {
+      const { data } = router.query;
+      console.log(router);
+      console.log(router.query);
+      try {
+        let parsedData = JSON.parse(data);
+        if (parsedData) {
+          jsonData['PRE_CALL'] = parsedData['PRE_CALL'] || '';
+          jsonData['EXCEPTION'] = parsedData['EXCEPTION'] || '';
+          jsonData['KWARGS'] = parsedData['KWARGS'] || '';
+          jsonData['POST_CALL'] = parsedData['POST_CALL'] || '';
+        }
+      } catch (error) {
+        console.error("Error parsing JSON data:", error);
+      }
+    }
+  }, [router.isReady]);
+
+
 
   let exception = jsonData['EXCEPTION']
   console.log(exception)
